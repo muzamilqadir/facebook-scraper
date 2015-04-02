@@ -1,0 +1,3 @@
+1- Open the file credentials.txt
+2- Put email and password for your facebook account.
+3- Run script.py
