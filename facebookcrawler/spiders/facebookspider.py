@@ -20,11 +20,18 @@ global email,password,locations
 email = ''
 password = ''
 locations = []
-with open('credentials.txt','r') as cf:
-    credentials = json.loads(cf.read())
-    email = credentials['email']
-    password = credentials['password']
-    locations = credentials["locations"]
+
+import Tkinter
+import tkSimpleDialog
+
+root = Tkinter.Tk()
+email = tkSimpleDialog.askstring('Email', 'Please Enter Your Email:')
+password = tkSimpleDialog.askstring('Password', 'Please Enter Your Password:',show='*')
+locations = tkSimpleDialog.askstring('Locations', 'Comma separated values:')
+print email
+print password
+print locations
+root.withdraw()
 
 class FacebookspiderSpider(scrapy.Spider):
     name = "facebookspider"
@@ -37,7 +44,10 @@ class FacebookspiderSpider(scrapy.Spider):
         # driver = webdriver.Firefox()
         global email
         global password
-        driver = webdriver.Chrome('./chromedriver.exe')
+        global locations
+        driver = webdriver.Chrome()
+        # driver = webdriver.Chrome('./chromedriver.exe')
+        #driver = webdriver.Firefox()
         driver.get('https://www.facebook.com/')
         print "here"
         email_elem = driver.find_element_by_name("email")
@@ -49,7 +59,7 @@ class FacebookspiderSpider(scrapy.Spider):
         body = driver.find_element_by_tag_name("body")
         body.send_keys(Keys.CONTROL + 't')
         # location = "Lahore"        
-        for location in locations:
+        for location in locations.split(','):
             driver.get("https://www.facebook.com/search/str/my%20friends%20who%20live%20near%20"+location+"/keywords_top")
             people_elem = driver.find_elements_by_class_name('phs')
             people_elem[1].click()
